@@ -18,7 +18,8 @@ When you have finished all of the questions - open a pull request with your answ
 1. Create a new database called `cyf_classes` (hint: use `createdb` in the terminal)
 2. Create a new table `mentors`, for each mentor we want to save their name, how many years they lived in Glasgow, their address and their favourite programming language.
 
-~~~CREATE TABLE mentors(
+~~~
+CREATE TABLE mentors(
   id            SERIAL PRIMARY KEY,
   name          VARCHAR(30) NOT NULL,
   glasgow_years INT NOT NULL,
@@ -39,7 +40,8 @@ INSERT INTO mentors (name, glasgow_years, address, fav_prog_language) VALUES ('R
 
 4. Create a new table `students`, for each student we want to save their name, address and if they have graduated from Code Your Future.
 
-~~~CREATE TABLE students(
+~~~
+CREATE TABLE students(
   id            SERIAL PRIMARY KEY,
   name          VARCHAR(30) NOT NULL,
   address       VARCHAR(120) NOT NULL,
@@ -74,7 +76,8 @@ SELECT * FROM students WHERE graduated = FALSE;
    - A class has a topic (such as Javascript, NodeJS)
    - A class is taught at a specific date and at a specific location
 
-~~~create table classes (
+~~~
+create table classes (
 	id serial primary key,
 	mentor serial references mentors(id),
 	topic varchar(30),
@@ -94,7 +97,8 @@ insert into classes (mentor, topic, date, location) values(1, 'java', now(), 'on
 
 9. We now want to store who among the students attends a specific class. How would you store that? Come up with a solution and insert some data if you model this as a new table.
 
-~~~create table attendance (
+~~~
+create table attendance (
 	id serial primary key,
 	student serial references students(id),
 	class serial references classes(id)

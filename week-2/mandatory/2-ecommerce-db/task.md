@@ -35,6 +35,7 @@ Open the file `cyf_ecommerce.sql` in VSCode and make sure you understand all the
 
 Once you understand the database that you are going to work with, solve the following challenge by writing SQL queries using everything you learned about SQL:
 
+
 1. Retrieve all the customers names and addresses who lives in United States
 
 ```
@@ -125,4 +126,13 @@ join order_items oi on oi.order_id = o.id
 join products p on p.id = oi.product_id 
 join suppliers s on s.id = p.supplier_id 
 where s.country = 'China';
+```
+
+## Reset if needed 
+```
+drop table if exists order_items;
+drop table if exists orders;
+drop table if exists customers;
+drop table if exists products;
+drop table if exists suppliers;
 ```

@@ -12,11 +12,6 @@ In the following homework, you will create new API endpoints in the NodeJS appli
 
 - If you don't have it already, add a new GET endpoint `/products` to load all the product names along with their supplier names.
 
-```
-app.get('/products', getProductsAndSupplierNames)
-```
-
-```
 const getProductsAndSupplierNames = (request, response) => {
     pool.query(`select p.product_name, s.supplier_name from products p
     join suppliers s on s.id = p.supplier_id;`, (error, result) => {
@@ -25,11 +20,21 @@ const getProductsAndSupplierNames = (request, response) => {
 }
 ```
 
-- Update the previous GET endpoint `/products` to filter the list of products by name using a query parameter, for example `/products?name=Cup`. This endpoint should still work even if you don't use the `name` query parameter!
+```
+app.get('/products', getProductsAndSupplierNames)
+```
 
 ```
-app.get('/products-by-name', getProductsAndSupplierNameByProductName);
+app.get('/products', (req,res) => {
+  pool.query(`select p.product_name, s.supplier_name from products p
+    join suppliers s on s.id = p.supplier_id;`)
+    .then(result => res.send(result.rows))
+    .catch(error => console.log(error))
+})
 ```
+
+
+- Update the previous GET endpoint `/products` to filter the list of products by name using a query parameter, for example `/products?name=Cup`. This endpoint should still work even if you don't use the `name` query parameter!
 
 ```
 const getProductsAndSupplierNameByProductName = (request, response) => {
@@ -42,6 +47,12 @@ const getProductsAndSupplierNameByProductName = (request, response) => {
     });
 }
 ```
+
+```
+app.get('/products-by-name', getProductsAndSupplierNameByProductName);
+```
+
+
 
 - Add a new GET endpoint `/customers/:customerId` to load a single customer by ID.
 
@@ -83,8 +94,22 @@ const getProductsAndSupplierNameByProductName = (request, response) => {
 - Add a new DELETE endpoint `/customers/:customerId` to delete an existing customer only if this customer doesn't have orders.
 
 ```
-
+app.delete("/customers/:customerId", function(res,req){
+    const customerId = req.params.customerId;
+    
+    pool
+        .query("DELETE FROM bookings WHERE customer_id=$1", [customerId])
+        .then(() => {
+            pool
+                .query("DELETE FROM customers WHERE id=$1", [customerId])
+                .then(() => res.send(`Customer ${customerId} deleted!`))
+                .catch((e) => console.error(e.message));
+        })
+        .catch((e) => res.status(400).send("Something went wrong"));
+};
 ```
+
+
 
 - Add a new GET endpoint `/customers/:customerId/orders` to load all the orders along the items in the orders of a specific customer. Especially, the following information should be returned: order references, order dates, product names, unit prices, suppliers and quantities.
 
